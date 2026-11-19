@@ -25,6 +25,7 @@ SOURCE = Path(__file__).resolve().with_name("entry.png")
 
 
 def sha256(path: Path) -> str:
+    """Hash of a file's bytes, used to prove the copy is exact."""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1 << 20), b""):
@@ -40,7 +41,7 @@ def main() -> int:
     if sha256(target) != sha256(SOURCE):
         print("entry.png differs after copy", file=sys.stderr)
         return 1
-    print(f"wrote {target} ({target.stat().st_size} bytes)")
+    print(f"wrote {target} ({target.stat().st_size} bytes, sha256 {sha256(target)[:12]}...)")
     return 0
 
 
